@@ -13,7 +13,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/"); // Redirect to main app after login
+      router.push("/"); // Redirect to home
     } catch (error) {
       setError("Invalid email or password.");
     }
@@ -22,11 +22,9 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
       <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-6">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-400">Welcome Back</h2>
         <p className="text-gray-400 text-center mb-6">Sign in to continue</p>
-
         {error && <p className="text-red-500 text-center">{error}</p>}
-
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
@@ -51,10 +49,9 @@ export default function LoginPage() {
             Sign In
           </button>
         </form>
-
         <p className="text-gray-400 text-center mt-4">
           Don't have an account?{" "}
-          <a href="/register" className="text-blue-400 hover:underline">
+          <a href="/registration" className="text-blue-400 hover:underline">
             Sign up
           </a>
         </p>
@@ -62,3 +59,4 @@ export default function LoginPage() {
     </div>
   );
 }
+

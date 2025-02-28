@@ -1,10 +1,11 @@
 "use client";
 import { useState } from "react";
-import { auth, createUserWithEmailAndPassword } from "@/firebase";
+import { auth, createUserWithEmailAndPassword, updateProfile } from "../../../firebase";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const [name, setName] = useState(""); // Store name
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -18,8 +19,9 @@ export default function RegisterPage() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      router.push("/"); // Redirect to main app after registration
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      await updateProfile(userCredential.user, { displayName: name }); // Save name in Firebase
+      router.push("/"); // Redirect to home
     } catch (error) {
       setError("Failed to create account. Try again.");
     }
@@ -28,11 +30,17 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-900 text-white">
       <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-6">Create an Account</h2>
-
+        <h2 className="text-3xl font-bold text-center mb-6 text-blue-400">Create an Account</h2>
         {error && <p className="text-red-500 text-center">{error}</p>}
-
         <form onSubmit={handleRegister} className="space-y-4">
+          <input
+            type="text"
+            placeholder="Full Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          />
           <input
             type="email"
             placeholder="Email"
@@ -64,7 +72,6 @@ export default function RegisterPage() {
             Sign Up
           </button>
         </form>
-
         <p className="text-gray-400 text-center mt-4">
           Already have an account?{" "}
           <a href="/login" className="text-blue-400 hover:underline">
@@ -75,3 +82,4 @@ export default function RegisterPage() {
     </div>
   );
 }
+
